@@ -46,6 +46,7 @@ export default {
       })
       if (result) {
         this.shares[index].like.forEach((element) => {
+         if (element.user_id == this.$store.state.user.id) {
           axios({
             method: "delete",
             url: "https://salty-everglades-48045.herokuapp.com/api/like",
@@ -60,6 +61,7 @@ export default {
               force: true,
             })
           })
+         }
         })
       } else {
         axios

@@ -49,7 +49,7 @@ export default {
           user_id: this.$store.state.user.id,
           content: this.content,
         })
-        then((response) => {
+        .then((response) => {
           console.log(response)
           this.content = ""
           this.$router.go({
