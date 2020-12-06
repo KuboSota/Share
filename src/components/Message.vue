@@ -4,30 +4,120 @@
       <div class="message">
         <div class="flex">
           <p class="name">{{ value.name }}</p>
-          <img src="../assets/assets/heart.png" class="icon" />
+          <img src="../assets/assets/heart.png" @click="fav(index)" alt class="icon" />
           <p class="number">{{ value.like.length }}</p>
-          <img src="../assets/assets/cross.png" class="icon" />
-          <img src="../assets/assets/detail.png" class="icon detail" />
+          <img 
+          @click="del(index)"
+           alt 
+           v-if="path && profile" 
+           src="../assets/assets/cross.png" 
+           class="icon" />
+          <img
+           @click="
+           $router.push({
+            path: '/detail' + value.item.id,
+          })" 
+          alt
+          v-if="profile"
+          src="../assets/assets/detail.png" 
+          class="icon detail" />
         </div>
-        <p class="text">{{ value.share }}</p>
+        <p class="text">{{ value.item.share }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 export default {
+  props: ["id"],
   data() {
     return {
-      shares : [
-        {
-          name:"太郎",
-          like: [],
-          share: "初めまして"
-        }
-      ]
+      shares: [],
+      path: true,
+      profile: true,
     }
+  },
+  methods: {
+    fav(index) {
+      const result = this.shares[index].like.some((value) => {
+        return value.user_id == this.$store.state.user.id
+      })
+      if (result) {
+        this.shares[index].like.forEach((element) => {
+          axios({
+            method: "delete",
+            url: "https://salty-everglades-48045.herokuapp.com/api/like",
+            data: {
+              share_id: this.share[index].item.id,
+              user_id: this.$store.state.user.id,
+            },
+          }).then((response) => {
+            console.log(response)
+            this.$router.go({
+              path:this.$router.currentRoute.path,
+              force: true,
+            })
+          })
+        })
+      } else {
+        axios
+          .post("https://salty-everglades-48045.herokuapp.com/api/like", {
+            share_id: this.shares[index].item.id,
+            user_id: this.$store.state.user.id,
+          })
+          .then((response) => {
+            console.log(response)
+            this.$router.go({
+              path: this.$router.currentRoute.path,
+              force: true,
+            })
+          })
+      }
+    },
+    del(index) {
+      axios  
+         .delete(
+           "https://salty-everglades-48045.herokuapp.com/api/shares/" + this.shares[index].item.id
+         )
+         .then((response) => {
+           console.log(response)
+           this.$router.go({
+             path: this.$router.currentRoute.path,
+             force: true,
+           })
+         })
+    },
+    async getShares() {
+      let data = []
+      const shares = await axios.get(
+        "https://salty-everglades-48045.herokuapp.com/api/shares"
+      )
+      for (let i = 0; i < shares.data.data.length; i++) {
+        await axios 
+          .get(
+            "https://salty-everglades-48045.herokuapp.com/api/shares/" + shares.data.data[i].id
+          )
+          .then((response) => {
+            if(this.$route.name == "profile") {
+              if (response.data.item.user_id == this.$store.state.user.id) {
+                data.push(response.data)
+              }
+            } else if (this.$route.name == "detail") {
+              if (response.data.item.id == this.id) {
+                data.push(response.data)
+              }
+            } else {
+               data.push(response.data)
+            }
+          })
+      }
+      this.shares = data
+      console.log(this.shares)
+    },
   }
+
 }
 </script>
 
