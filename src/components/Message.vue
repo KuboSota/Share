@@ -15,7 +15,8 @@
           <img
            @click="
            $router.push({
-            path: '/detail' + value.item.id,
+            path: '/detail/' + value.item.id,
+            params: { id: value.item.id },
           })" 
           alt
           v-if="profile"
@@ -51,13 +52,13 @@ export default {
             method: "delete",
             url: "https://aqueous-basin-17342.herokuapp.com/api/like",
             data: {
-              share_id: this.share[index].item.id,
+              share_id: this.shares[index].item.id,
               user_id: this.$store.state.user.id,
             },
           }).then((response) => {
             console.log(response)
             this.$router.go({
-              path:this.$router.currentRoute.path,
+              path: this.$router.currentRoute.path,
               force: true,
             })
           })
@@ -117,6 +118,15 @@ export default {
       }
       this.shares = data
       console.log(this.shares)
+    },
+    created() {
+      if (this.$route.name === "home") {
+        this.path = false
+      }
+      if (this.$route.name === "detail") {
+        this.profile = false
+      }
+      this.getShares()
     },
   }
 
