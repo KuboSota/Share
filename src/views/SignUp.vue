@@ -29,7 +29,7 @@ export default {
   components: {
     HeaderAuth,
   },
-  method: {
+  methods: {
     auth() {
       axios
         .post("https://aqueous-basin-17342.herokuapp.com/api/register", {
