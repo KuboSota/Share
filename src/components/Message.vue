@@ -49,7 +49,7 @@ export default {
          if (element.user_id == this.$store.state.user.id) {
           axios({
             method: "delete",
-            url: "https://salty-everglades-48045.herokuapp.com/api/like",
+            url: "https://aqueous-basin-17342.herokuapp.com/api/like",
             data: {
               share_id: this.share[index].item.id,
               user_id: this.$store.state.user.id,
@@ -65,7 +65,7 @@ export default {
         })
       } else {
         axios
-          .post("https://salty-everglades-48045.herokuapp.com/api/like", {
+          .post("https://aqueous-basin-17342.herokuapp.com/api/like", {
             share_id: this.shares[index].item.id,
             user_id: this.$store.state.user.id,
           })
@@ -81,7 +81,7 @@ export default {
     del(index) {
       axios  
          .delete(
-           "https://salty-everglades-48045.herokuapp.com/api/shares/" + this.shares[index].item.id
+           "https://aqueous-basin-17342.herokuapp.com/api/shares/" + this.shares[index].item.id
          )
          .then((response) => {
            console.log(response)
@@ -94,12 +94,12 @@ export default {
     async getShares() {
       let data = []
       const shares = await axios.get(
-        "https://salty-everglades-48045.herokuapp.com/api/shares"
+        "https://aqueous-basin-17342.herokuapp.com/api/shares"
       )
       for (let i = 0; i < shares.data.data.length; i++) {
         await axios 
           .get(
-            "https://salty-everglades-48045.herokuapp.com/api/shares/" + shares.data.data[i].id
+            "https://aqueous-basin-17342.herokuapp.com/api/shares/" + shares.data.data[i].id
           )
           .then((response) => {
             if(this.$route.name == "profile") {

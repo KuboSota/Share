@@ -22,7 +22,7 @@ export default {
     }
   },
   components: {
-    HeaderAuth,
+    HeaderAuth
   },
   methods: {
     auth() {
