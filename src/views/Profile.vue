@@ -38,7 +38,7 @@ export default {
     edit() {
       if (!this.active) {
         axios  
-          .put("https://aqueous-basin-17342.herokuapp.com/api/user", {
+          .put("https://shrouded-castle-85732.herokuapp.com/api/user", {
             email: this.$store.state.user.email,
             profile: this.profile,
           })
